@@ -19,7 +19,7 @@ public class GridMap : MonoBehaviour
 
     void BuildMap()
     {
-        var nodes = FindObjectsOfType<Node>();
+        var nodes = FindObjectsOfType<Node>().Where(n => !n.ignore);
 
         // +1 since to compensate for zero-based counting
         Columns = nodes.Max(n => n.x) + 1;
@@ -28,6 +28,10 @@ public class GridMap : MonoBehaviour
         map = new Node[Columns, Rows];
         foreach (var node in nodes)
         {
+            // Ignore everything out of bounds...might be decoration or quick access to prefabs
+            if (!InBounds(node.x, node.y))
+                continue;
+
             // To help us idenitfy them easier/faster
             node.name = $"Node_{node.x}_{node.y}";
             map[node.x, node.y] = node;
@@ -73,15 +77,13 @@ public class GridMap : MonoBehaviour
         return node != null ? node.GetComponent<T>() : null;
     }
 
-    public Node GetNode(Vector2 position)
-    {
-        return GetNode((int)position.x, (int)position.y);
-    }    
+    public Node GetNode(Vector2 position) => GetNode((int)position.x, (int)position.y);
+    public Node GetNode(int x, int y) => InBounds(x, y) ? map[x, y] : null;
 
-    public Node GetNode(int x, int y)
+    private bool InBounds(int x, int y)
     {
         var xInBounds = x >= 0f && x < map.GetLength(0);
         var yInBounds = y >= 0f && y < map.GetLength(1);
-        return xInBounds && yInBounds ? map[x, y] : null;
+        return xInBounds && yInBounds;
     }
 }

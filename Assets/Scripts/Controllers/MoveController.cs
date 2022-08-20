@@ -100,30 +100,6 @@ public class MoveController : Singleton<MoveController>
         return direction;
     }
 
-    bool IsHorizontalDirection(Vector2 direction)
-    {
-        return (direction == Vector2.left || direction == Vector2.right);
-    }
-
-    /// <summary>
-    /// Based on the direction moving will be how much we will move to simulate the bonk
-    /// </summary>
-    /// <param name="player"></param>
-    /// <param name="destination"></param>
-    /// <param name="direction"></param>
-    /// <returns></returns>
-    Vector2 GetBonkDestination(Player player, Vector3 destination, Vector2 direction)
-    {
-        bool horizontalMove = IsHorizontalDirection(direction);
-
-        // Cut the distance so that it looks like we bonk
-        if (horizontalMove)
-            destination.x = player.Position.x + (bonkDistance * direction.x);
-        else
-            destination.y = player.Position.y + (bonkDistance * direction.y);
-        return destination;
-    }      
-
     /// <summary>
     /// Bonks in the direction given
     /// </summary>
@@ -132,21 +108,10 @@ public class MoveController : Singleton<MoveController>
     /// <returns></returns>
     public IEnumerator PlayerBonkRoutine(Player player, Vector2 direction)
     {
-        var origin = player.Position;
-        var destination = GetBonkDestination(player, player.Position + direction, direction);
-
-        // Move into destination
-        yield return StartCoroutine(MovePlayerRoutine(player, destination, direction, bonkTime));
-
-        // Bonk back to origin        
-        yield return StartCoroutine(BonkPlayerBackToOriginRoutine(player, origin));
-    }
-
-    IEnumerator BonkPlayerBackToOriginRoutine(Player player, Vector2 origin)
-    {
-        // Play Bonk Sound
-        LeanTween.move(player.gameObject, origin, bonkTime);
+        player.Walk(direction);
         yield return new WaitForSeconds(bonkTime);
+        yield return new WaitForSeconds(bonkTime);
+        player.Idle(direction);
     }
 
     /// <summary>
@@ -157,19 +122,32 @@ public class MoveController : Singleton<MoveController>
     /// <param name="destination"></param>
     /// <param name="time"></param>
     /// <returns></returns>
-    public IEnumerator MovePlayerRoutine(Player player, Vector2 direction, Vector2 destination, float time)
+    public IEnumerator MovePlayerRoutine(Player player, Vector2 destination, Vector2 direction, float time)
     {
-        player.IsJumping = true;
-        player.SetDirection(direction);
+        player.Jump(direction);
 
-        // Do a Hop or Pop        
-        if (IsHorizontalDirection(direction))
-            yield return StartCoroutine(PlayerJumpToDestinationRoutine(player, destination, time));
-        else
-            yield return StartCoroutine(PlayerPopToDestinationRoutine(player, destination, time));
+        LeanTween.move(player.gameObject, destination, time);
+        yield return new WaitForSeconds(time);
 
-        player.IsJumping = false;
-        player.SetDirection(direction);
+        player.Idle(direction);
+    }
+
+    /// <summary>
+    /// Player is pushing in a given direciton
+    /// </summary>
+    /// <param name="player"></param>
+    /// <param name="destination"></param>
+    /// <param name="direction"></param>
+    /// <param name="time"></param>
+    /// <returns></returns>
+    public IEnumerator PlayerPushRoutine(Player player, Vector2 destination, Vector2 direction, float time)
+    {
+        player.Push(direction);
+
+        LeanTween.move(player.gameObject, destination, time);
+        yield return new WaitForSeconds(time);
+
+        player.Idle(direction);
     }
 
     /// <summary>
@@ -182,55 +160,8 @@ public class MoveController : Singleton<MoveController>
     /// <returns></returns>
     public IEnumerator MovePlayerRoutine(Player player, Node node, Vector2 direction, float time)
     {
-        // Since the player is moving into a new node
-        // we need to update their current node so that everyone else is aware of where the player is at
         player.Node = node;
         yield return StartCoroutine(MovePlayerRoutine(player, node.Position, direction, time));
-    }
-
-    /// <summary>
-    /// Plays the player's jump animation as it moves into the destination
-    /// </summary>
-    /// <param name="player"></param>
-    /// <param name="destination"></param>
-    /// <param name="time"></param>
-    /// <returns></returns>
-    public IEnumerator PlayerJumpToDestinationRoutine(Player player, Vector2 destination, float time)
-    {
-        // Start Moving
-        var halfTime = time / 2;
-        LeanTween.moveX(player.gameObject, destination.x, time);
-
-        // Jump Up
-        LeanTween.moveY(player.gameObject, player.Position.y + hopHeight, halfTime);
-        yield return new WaitForSeconds(halfTime);
-
-        // Land
-        LeanTween.moveY(player.gameObject, destination.y, halfTime);
-        yield return new WaitForSeconds(halfTime);
-    }
-
-    /// <summary>
-    /// Plays a "pop" animation as it moves into the tile
-    /// </summary>
-    /// <param name="player"></param>
-    /// <param name="destination"></param>
-    /// <param name="time"></param>
-    /// <returns></returns>
-    public IEnumerator PlayerPopToDestinationRoutine(Player player, Vector2 destination, float time)
-    {
-        // Scale up
-        var halfTime = time / 2;
-        var scale = new Vector3(hopScale, hopScale, 1f);
-        LeanTween.scale(player.gameObject, scale, halfTime);
-
-        // Start Moving
-        LeanTween.move(player.gameObject, destination, time);
-        yield return new WaitForSeconds(halfTime);
-
-        // Scale down
-        LeanTween.scale(player.gameObject, Vector3.one, halfTime);
-        yield return new WaitForSeconds(halfTime);
     }
 
     /// <summary>

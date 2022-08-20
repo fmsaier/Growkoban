@@ -5,6 +5,12 @@ using System.Linq;
 
 public class Node : MonoBehaviour
 {
+    /// <summary>
+    /// So that we can tell the level controller and grid manager to skip this node
+    /// For nodes in places like the palette of prefabs
+    /// </summary>
+    public bool ignore = false;
+
     Crate crate;
     public Crate Crate
     {

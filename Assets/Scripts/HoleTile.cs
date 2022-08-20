@@ -5,7 +5,7 @@ public class HoleTile : Node
     {
         get
         {
-            return IsEmpty;
+            return !IsEmpty;
         }
 
         set
@@ -17,5 +17,5 @@ public class HoleTile : Node
     /// <summary>
     /// The hole has not been filled by a crate
     /// </summary>
-    public bool IsEmpty { get; set; }
+    public bool IsEmpty { get; set; } = true;
 }

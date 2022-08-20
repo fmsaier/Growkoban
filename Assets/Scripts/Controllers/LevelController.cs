@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.InputSystem;
 
 public class LevelController : Singleton<LevelController>
 {
@@ -45,24 +46,66 @@ public class LevelController : Singleton<LevelController>
         }
     }
 
+    List<StarTile> starTiles;
+    List<StarTile> StarTiles
+    {
+        get
+        {
+            if (starTiles == null || starTiles.Count < 1)
+                starTiles = FindObjectsOfType<StarTile>().Where(s => !s.ignore).ToList();
+            return starTiles;
+        }
+    }
+
     IEnumerator currentRoutine;
     bool CanRun
     {
         get
         {
-            return currentRoutine == null && MovingPlayers.Count < 1;
+            return IsLoaded && !GameManager.instance.IsTransitioning && currentRoutine == null && MovingPlayers.Count < 1;
         }
     }
 
+    bool IsLoaded { get; set; }
+    public bool CanMenuBeOpened { get { return CanRun; } }
+    public bool PlayerIsOnNode(Node node) => Players.Where(p => p.Node == node).FirstOrDefault() != null;
     public Node GetNode(Vector2 position) => GridMap.GetNode(position);
-
-    private void Start()
+    public void AddActivePlayer(Player player)
     {
+        if (!Players.Contains(player))
+            Players.Add(player);
+    }
+    public void RemoveActivePlayer(Player player)
+    {
+        if (Players.Contains(player))
+            Players.Remove(player);
+    }
+
+    void CheckForDuplication(Player player, Vector2 direction)
+    {
+        var duplicator = player.Node as DuplicationTile;
+        if (duplicator != null)
+            duplicator.Duplicate(direction);
+    }
+
+    private void Start() => StartCoroutine(LoadLevelRoutine());
+
+    IEnumerator LoadLevelRoutine()
+    {
+        IsLoaded = false;
         GridMap.Build();
+        yield return StartCoroutine(GameManager.instance.FadeInRoutine());
+        IsLoaded = true;
     }
 
     void Update()
     {
+        if (IsLoaded && Keyboard.current.rKey.wasPressedThisFrame)
+        {
+            GameManager.instance.ReloadLevel();
+            return;
+        }
+
         if (!CanRun)
             return;
 
@@ -91,11 +134,11 @@ public class LevelController : Singleton<LevelController>
                 break;
         }
 
-        currentRoutine = MoveRoutine(players, direction);
+        currentRoutine = HandleMovementRoutine(players, direction);
         StartCoroutine(currentRoutine);
     }    
 
-    IEnumerator MoveRoutine(List<Player> players, Vector2 direction)
+    IEnumerator HandleMovementRoutine(List<Player> players, Vector2 direction)
     {
         // Clean up to be safe
         MovingPlayers.Clear();
@@ -131,6 +174,15 @@ public class LevelController : Singleton<LevelController>
         while (MovingPlayers.Count > 0)
             yield return new WaitForEndOfFrame();
 
+        // If we have no more players have moving (probably fell into a hole)
+        // then it is game over so reload
+        if (Players.Count < 1)
+            GameManager.instance.ReloadLevel();
+
+        // All star tiles are occupied by the player, level completed
+        else if(StarTiles.Where(s=> !s.HasPlayer).FirstOrDefault() == null)
+            GameManager.instance.NextLevel();
+
         currentRoutine = null;
     }
 
@@ -145,7 +197,12 @@ public class LevelController : Singleton<LevelController>
     {
         // If the node is walkable then we can simply move into it
         if (node.IsWalkable)
+        {
+            // If the current node we are moving away from is a duplication tile
+            // We want to trigger it to duplicate
+            CheckForDuplication(player, direction);
             yield return StartCoroutine(MoveController.instance.MovePlayerRoutine(player, node, direction, moveTime));
+        }
         else
         {
             var hole = node as HoleTile;
@@ -161,11 +218,11 @@ public class LevelController : Singleton<LevelController>
             // Colliding with a wall
             else
                 yield return StartCoroutine(MoveController.instance.PlayerBonkRoutine(player, direction));
-        }         
+        }
 
         if (MovingPlayers.Contains(player))
             MovingPlayers.Remove(player);
-    }    
+    }
 
     /// <summary>
     /// Player jumped into an empty hole
@@ -183,9 +240,7 @@ public class LevelController : Singleton<LevelController>
         if (MovingPlayers.Contains(player))
             MovingPlayers.Remove(player);
 
-        if (Players.Contains(player))
-            Players.Remove(player);
-
+        RemoveActivePlayer(player);
         Destroy(player.gameObject);
     }
 
@@ -200,9 +255,10 @@ public class LevelController : Singleton<LevelController>
     {
         var crate = node.Crate;
         var newNode = GridMap.GetNode(crate.Position + direction);
-
-        // Bonk if the crate cannot move to a tile in the same direction
-        if (newNode == null || !newNode.IsWalkable)
+        var wall = newNode as WallTile;
+        
+        // Cannot move the crate is the new node doesn't exist, is a wall, or has a crate on it
+        if (newNode == null || wall != null || newNode.Crate != null)
             yield return StartCoroutine(MoveController.instance.PlayerBonkRoutine(player, direction));
 
         // Push the object and move
@@ -215,22 +271,26 @@ public class LevelController : Singleton<LevelController>
     /// </summary>
     /// <param name="player"></param>
     /// <param name="crate"></param>
-    /// <param name="curNode"></param>
-    /// <param name="newNode"></param>
+    /// <param name="playerNode"></param>
+    /// <param name="crateNode"></param>
     /// <param name="direction"></param>
     /// <returns></returns>
-    IEnumerator MoveCrateRoutine(Player player, Crate crate, Node curNode, Node newNode, Vector2 direction)
+    IEnumerator MoveCrateRoutine(Player player, Crate crate, Node playerNode, Node crateNode, Vector2 direction)
     {
+        // If the current node we are moving away from is a duplication tile
+        // We want to trigger it to duplicate
+        CheckForDuplication(player, direction);
+
         // We need to move both the player and the moveable
-        StartCoroutine(MoveController.instance.MoveToRoutine(crate.gameObject, newNode.Position, moveTime));
-        yield return StartCoroutine(MoveController.instance.MovePlayerRoutine(player, curNode, direction, moveTime));
+        StartCoroutine(MoveController.instance.MoveToRoutine(crate.gameObject, crateNode.Position, moveTime));
+        yield return StartCoroutine(MoveController.instance.PlayerPushRoutine(player, playerNode.Position, direction, moveTime));
 
         // Reassign the block to the new node
-        curNode.Crate = null;
-        newNode.Crate = crate;
+        playerNode.Crate = null;
+        crateNode.Crate = crate;
 
         // Crate is covering a hole
-        var hole = newNode as HoleTile;
+        var hole = crateNode as HoleTile;
         if (hole && hole.IsEmpty)
         {
             crate.FillHole();
@@ -238,7 +298,7 @@ public class LevelController : Singleton<LevelController>
 
             // Since this crate filled in the hole
             // we will remove it from the node so it cannot be pushed out of the hole
-            newNode.Crate = null;
+            crateNode.Crate = null;
         }
     }
 }

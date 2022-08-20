@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
-    public Direction Direction { get; protected set; }
+    public Direction Direction { get; protected set; } = Direction.Down;
     public bool IsJumping { get; set; }
     public Vector2 Position
     {
@@ -24,6 +24,18 @@ public class Player : MonoBehaviour
     /// </summary>
     public Node Node { get; set; }
 
+    [SerializeField]
+    PlayerAnimations playerAnimations;
+    PlayerAnimations PlayerAnimations
+    {
+        get
+        {
+            if (playerAnimations == null)
+                playerAnimations = GetComponentInChildren<PlayerAnimations>();
+            return playerAnimations;
+        }
+    }
+
     private void Start() => Node = LevelController.instance.GetNode(Position);
 
     public void SetDirection(Vector2 direction)
@@ -40,4 +52,30 @@ public class Player : MonoBehaviour
         if (direction == Vector2.left)
             Direction = Direction.Left;
     }
+
+    public void Idle(Vector2 direction)
+    {
+        SetDirection(direction);
+        PlayerAnimations.Idle(Direction);
+    }
+
+    public void Walk(Vector2 direction)
+    {
+        SetDirection(direction);
+        PlayerAnimations.Walk(Direction);
+    }
+
+    public void Push(Vector2 direction)
+    {
+        SetDirection(direction);
+        PlayerAnimations.Push(Direction);
+    }
+
+    public void Jump(Vector2 direction)
+    {
+        SetDirection(direction);
+        PlayerAnimations.Jump(Direction);
+    }
+
+    public void Fall() => PlayerAnimations.Fall();
 }
