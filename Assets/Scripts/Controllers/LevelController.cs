@@ -10,6 +10,9 @@ public class LevelController : Singleton<LevelController>
     float moveTime = .3f;
 
     [SerializeField]
+    float fallTime = .15f;
+
+    [SerializeField]
     LeanTweenType moveTween = LeanTweenType.linear;
 
     GridMap gridMap;
@@ -22,6 +25,9 @@ public class LevelController : Singleton<LevelController>
             return gridMap;
         }
     }
+
+    [Header("SFX")]
+    [SerializeField] SoundEffect winJingleSFX;
 
     [SerializeField]
     List<Player> activePlayers;
@@ -181,9 +187,15 @@ public class LevelController : Singleton<LevelController>
 
         // All star tiles are occupied by the player, level completed
         else if(StarTiles.Where(s=> !s.HasPlayer).FirstOrDefault() == null)
-            GameManager.instance.NextLevel();
+            LevelCompleted();
 
         currentRoutine = null;
+    }
+
+    void LevelCompleted()
+    {
+        AudioManager.instance.Play(winJingleSFX);
+        GameManager.instance.NextLevel();
     }
 
     IEnumerator BonkRoutine(Player player, Vector2 direction)
@@ -235,6 +247,10 @@ public class LevelController : Singleton<LevelController>
     {
         // Jump into the hole
         yield return StartCoroutine(MoveController.instance.MovePlayerRoutine(player, node, direction, moveTime));
+
+        // Make them "fall"
+        player.Fall();
+        yield return new WaitForSeconds(fallTime);
 
         // Destroy the player
         if (MovingPlayers.Contains(player))

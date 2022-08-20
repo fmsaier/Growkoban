@@ -98,16 +98,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adbf111d1b629a746943f33e244f64a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  faceUpSprite: {fileID: 21300000, guid: 1f3d9ae218de03840b18520fc9308f57, type: 3}
-  jumpUpSprite: {fileID: 21300000, guid: ea799190d7ade01408a7f0027217759c, type: 3}
-  faceRightSprite: {fileID: 21300000, guid: fcc381710ecf962418ae4bebecdbef2f, type: 3}
-  jumpRightSprite: {fileID: 21300000, guid: fe7ec99b1e8e3e948b15ac62292d2610, type: 3}
-  faceDownSprite: {fileID: 21300000, guid: dfe47f4244354bb47a5fcef147d0ac3b, type: 3}
-  jumpDownSprite: {fileID: 21300000, guid: 52bb777d15eff16409118223d1268c04, type: 3}
-  faceLeftSprite: {fileID: 21300000, guid: 6b49a0850205a3944bd2727006a7e6d8, type: 3}
-  jumpLeftSprite: {fileID: 21300000, guid: 73f10a14f1784044d936e66579c882cc, type: 3}
-  player: {fileID: 1665297491462046391}
-  spriteRenderer: {fileID: 1665297491169355989}
+  animator: {fileID: 8922870577087716164}
+  jumpSFX: {fileID: 11400000, guid: 39e1b23eff6e9264a857ff3913f5f074, type: 2}
+  fallSFX: {fileID: 11400000, guid: b7acf3c4612e0c44d87a198d7bf87299, type: 2}
+  pushSFX: {fileID: 11400000, guid: 550790df5a933204286f2d7cf86de247, type: 2}
 --- !u!114 &1665297491169355994
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -168,6 +162,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 338ebdcdd2fe165428dc0b1240cae8f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerAnimations: {fileID: 0}
 --- !u!61 &6172792834310556566
 BoxCollider2D:
   m_ObjectHideFlags: 0

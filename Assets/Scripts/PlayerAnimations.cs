@@ -16,53 +16,10 @@ public class PlayerAnimations : MonoBehaviour
         }
     }
 
-    [SerializeField]
-    Sprite faceUpSprite;
-
-    [SerializeField]
-    Sprite jumpUpSprite;
-
-    [SerializeField]
-    Sprite faceRightSprite;
-
-    [SerializeField]
-    Sprite jumpRightSprite;
-
-    [SerializeField]
-    Sprite faceDownSprite;
-
-    [SerializeField]
-    Sprite jumpDownSprite;
-
-    [SerializeField]
-    Sprite faceLeftSprite;
-
-    [SerializeField]
-    Sprite jumpLeftSprite;
-
-    [SerializeField]
-    Player player;
-    Player Player
-    {
-        get
-        {
-            if (player == null)
-                player = GetComponentInParent<Player>();
-            return player;
-        }
-    }
-
-    [SerializeField]
-    SpriteRenderer spriteRenderer;
-    SpriteRenderer SpriteRenderer
-    {
-        get
-        {
-            if (spriteRenderer == null)
-                spriteRenderer = GetComponent<SpriteRenderer>();
-            return spriteRenderer;
-        }
-    }
+    [Header("SFX")]
+    [SerializeField] SoundEffect jumpSFX;
+    [SerializeField] SoundEffect fallSFX;
+    [SerializeField] SoundEffect pushSFX;
 
     int IdleDownAnimHash;
     int IdleUpAnimHash;
@@ -177,6 +134,7 @@ public class PlayerAnimations : MonoBehaviour
         }
 
         // Play it if not already playing it
+        AudioManager.instance.Play(pushSFX);
         PlayAnimation(state);
     }
 
@@ -200,9 +158,14 @@ public class PlayerAnimations : MonoBehaviour
         }
 
         // Play it if not already playing it
+        AudioManager.instance.Play(jumpSFX);
         PlayAnimation(state);
     }
 
-    public void Fall() => PlayAnimation(FallAnimHash);
+    public void Fall()
+    {
+        AudioManager.instance.Play(fallSFX);
+        PlayAnimation(FallAnimHash);
+    }
     void PlayAnimation(int state) => Animator.Play(state);
 }
