@@ -21,30 +21,36 @@ public class PlayerAnimations : MonoBehaviour
     [SerializeField] SoundEffect fallSFX;
     [SerializeField] SoundEffect pushSFX;
 
-    int IdleDownAnimHash;
-    int IdleUpAnimHash;
-    int IdleLeftAnimHash;
-    int IdleRightAnimHash;
+    [Header("Animation Hashes - Debug")]
+    [SerializeField] int IdleDownAnimHash;
+    [SerializeField] int IdleUpAnimHash;
+    [SerializeField] int IdleLeftAnimHash;
+    [SerializeField] int IdleRightAnimHash;
 
-    int JumpDownAnimHash;
-    int JumpUpAnimHash;
-    int JumpLeftAnimHash;
-    int JumpRightAnimHash;
+    [SerializeField] int JumpDownAnimHash;
+    [SerializeField] int JumpUpAnimHash;
+    [SerializeField] int JumpLeftAnimHash;
+    [SerializeField] int JumpRightAnimHash;
 
-    int WalkDownAnimHash;
-    int WalkUpAnimHash;
-    int WalkLeftAnimHash;
-    int WalkRightAnimHash;
+    [SerializeField] int WalkDownAnimHash;
+    [SerializeField] int WalkUpAnimHash;
+    [SerializeField] int WalkLeftAnimHash;
+    [SerializeField] int WalkRightAnimHash;
 
-    int PushDownAnimHash;
-    int PushUpAnimHash;
-    int PushLeftAnimHash;
-    int PushRightAnimHash;
+    [SerializeField] int PushDownAnimHash;
+    [SerializeField] int PushUpAnimHash;
+    [SerializeField] int PushLeftAnimHash;
+    [SerializeField] int PushRightAnimHash;
 
-    int FallAnimHash;
+    [SerializeField] int FallAnimHash;
 
     private void Start()
     {
+        PushUpAnimHash = Animator.StringToHash("PushUp");
+        PushDownAnimHash = Animator.StringToHash("PushDown");
+        PushLeftAnimHash = Animator.StringToHash("PushLeft");
+        PushRightAnimHash = Animator.StringToHash("PushRight");
+
         IdleUpAnimHash = Animator.StringToHash("IdleUp");
         IdleDownAnimHash = Animator.StringToHash("IdleDown");
         IdleLeftAnimHash = Animator.StringToHash("IdleLeft");
@@ -58,12 +64,7 @@ public class PlayerAnimations : MonoBehaviour
         WalkUpAnimHash = Animator.StringToHash("WalkUp");
         WalkDownAnimHash = Animator.StringToHash("WalkDown");
         WalkLeftAnimHash = Animator.StringToHash("WalkLeft");
-        WalkRightAnimHash = Animator.StringToHash("WalkRight");
-
-        PushUpAnimHash = Animator.StringToHash("PushUp");
-        PushDownAnimHash = Animator.StringToHash("PushDown");
-        PushLeftAnimHash = Animator.StringToHash("PushLeft");
-        PushRightAnimHash = Animator.StringToHash("PushRight");
+        WalkRightAnimHash = Animator.StringToHash("WalkRight");        
 
         FallAnimHash = Animator.StringToHash("Fall");
     }

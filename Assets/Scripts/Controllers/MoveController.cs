@@ -143,7 +143,9 @@ public class MoveController : Singleton<MoveController>
     public IEnumerator PlayerPushRoutine(Player player, Node destinationNode, Vector2 direction, float time)
     {
         player.Push(direction);
-        yield return StartCoroutine(MovePlayerRoutine(player, destinationNode, direction, time));
+        player.Node = destinationNode;
+        LeanTween.move(player.gameObject, destinationNode.Position, time);
+        yield return new WaitForSeconds(time);
         player.Idle(direction);
     }
 

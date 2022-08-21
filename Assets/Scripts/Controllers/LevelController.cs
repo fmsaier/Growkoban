@@ -190,22 +190,27 @@ public class LevelController : Singleton<LevelController>
 
         // All star tiles are occupied by the player, level completed
         else if (StarTiles.Where(s => !s.HasPlayer).FirstOrDefault() == null)
-            LevelCompleted();
+            yield return StartCoroutine(LevelCompletedRoutine());
 
         currentRoutine = null;
     }
 
-    void LevelCompleted()
+    IEnumerator LevelCompletedRoutine()
     {
-        AudioManager.instance.Play(winJingleSFX);
+        var src = AudioManager.instance.Play(winJingleSFX);
+        var halfTime = src.Clip.length / 2;
+        yield return new WaitForSeconds(halfTime);
         GameManager.instance.NextLevel();
+        yield return new WaitForSeconds(halfTime);
     }
 
     IEnumerator GameOverRoutine()
     {
         var src = AudioManager.instance.Play(gameOverSFX);
-        yield return new WaitForSeconds(src.Clip.length / 2);
+        var halfTime = src.Clip.length / 2;
+        yield return new WaitForSeconds(halfTime);
         GameManager.instance.ReloadLevel();
+        yield return new WaitForSeconds(halfTime);
     }
 
     IEnumerator BonkRoutine(Player player, Vector2 direction)

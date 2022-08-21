@@ -39,6 +39,8 @@ public class GameMenuController : Singleton<GameMenuController>
         InputActions.Player.Menu.performed -= MenuInputAction;
     }
 
+    private void Start() => CloseMenu();
+
     void MenuInputAction(InputAction.CallbackContext obj)
     {
         // There are reasons to prevent opening the menu

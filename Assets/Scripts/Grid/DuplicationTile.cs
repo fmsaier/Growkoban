@@ -43,10 +43,13 @@ public class DuplicationTile : Node
         }
     }
 
+    [SerializeField]
     Player spawnedPlayer;
 
     IEnumerator routine;
     bool CanMultiply { get; set; } = true;
+
+    private void Start() => CanMultiply = (spawnedPlayer == null);
 
     private void LateUpdate()
     {
