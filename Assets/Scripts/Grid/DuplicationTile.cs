@@ -5,6 +5,9 @@ using UnityEngine;
 public class DuplicationTile : Node
 {
     [SerializeField]
+    bool allowRespawn;
+
+    [SerializeField]
     Player playerPrefab;
 
     [SerializeField]
@@ -12,6 +15,21 @@ public class DuplicationTile : Node
 
     [SerializeField]
     Sprite outlineSprite;
+
+    [SerializeField]
+    SoundEffect poofSFX;
+
+    [SerializeField]
+    PoofVFX poofVFX;
+    PoofVFX PoofVFX
+    {
+        get
+        {
+            if (poofVFX == null)
+                poofVFX = GetComponentInChildren<PoofVFX>();
+            return poofVFX;
+        }
+    }
 
     [SerializeField]
     SpriteRenderer spriteRenderer;
@@ -32,8 +50,9 @@ public class DuplicationTile : Node
 
     private void LateUpdate()
     {
-        // Uncomment when we are ready to support re-spawning a dead clone
-        // CanMultiply = spawnedPlayer == null;
+        if(allowRespawn)
+            CanMultiply = spawnedPlayer == null;
+
         var sprite = CanMultiply ? avatarSprite : outlineSprite;
         SpriteRenderer.sprite = sprite;
     }
@@ -54,6 +73,11 @@ public class DuplicationTile : Node
         // We cannot spawn the new player
         while (!IsWalkable || Crate != null || LevelController.instance.PlayerIsOnNode(this))
             yield return new WaitForEndOfFrame();
+
+        // Poof
+        PoofVFX.Poof();
+        var src = AudioManager.instance.Play(poofSFX);
+        yield return new WaitForEndOfFrame();
 
         // Spawning and waiting a frame
         spawnedPlayer = Instantiate(playerPrefab);

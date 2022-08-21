@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd7c8ef0c141c1f48805158a4a09d411, type: 3}
   m_Name: FallSFX
   m_EditorClassIdentifier: 
-  preventMultiple: 0
+  preventMultiple: 1
   loop: 0
   clip: {fileID: 8300000, guid: 760906d99e6bfa34d9f4acc3d1c436ae, type: 3}
   clips: []
-  volume: 0.5
+  volume: 0.8
   pitch: 1
   randomPitch:
-    min: 0.9
+    min: 0.8
     max: 1.1

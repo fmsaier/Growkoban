@@ -13,6 +13,9 @@ public class LevelController : Singleton<LevelController>
     float fallTime = .15f;
 
     [SerializeField]
+    SoundEffect gameOverSFX;
+
+    [SerializeField]
     LeanTweenType moveTween = LeanTweenType.linear;
 
     GridMap gridMap;
@@ -106,7 +109,7 @@ public class LevelController : Singleton<LevelController>
 
     void Update()
     {
-        if (IsLoaded && Keyboard.current.rKey.wasPressedThisFrame)
+        if (IsLoaded && !GameManager.instance.IsTransitioning && Keyboard.current.rKey.wasPressedThisFrame)
         {
             GameManager.instance.ReloadLevel();
             return;
@@ -183,10 +186,10 @@ public class LevelController : Singleton<LevelController>
         // If we have no more players have moving (probably fell into a hole)
         // then it is game over so reload
         if (Players.Count < 1)
-            GameManager.instance.ReloadLevel();
+            yield return StartCoroutine(GameOverRoutine());
 
         // All star tiles are occupied by the player, level completed
-        else if(StarTiles.Where(s=> !s.HasPlayer).FirstOrDefault() == null)
+        else if (StarTiles.Where(s => !s.HasPlayer).FirstOrDefault() == null)
             LevelCompleted();
 
         currentRoutine = null;
@@ -196,6 +199,13 @@ public class LevelController : Singleton<LevelController>
     {
         AudioManager.instance.Play(winJingleSFX);
         GameManager.instance.NextLevel();
+    }
+
+    IEnumerator GameOverRoutine()
+    {
+        var src = AudioManager.instance.Play(gameOverSFX);
+        yield return new WaitForSeconds(src.Clip.length / 2);
+        GameManager.instance.ReloadLevel();
     }
 
     IEnumerator BonkRoutine(Player player, Vector2 direction)
@@ -249,8 +259,17 @@ public class LevelController : Singleton<LevelController>
         yield return StartCoroutine(MoveController.instance.MovePlayerRoutine(player, node, direction, moveTime));
 
         // Make them "fall"
-        player.Fall();
-        yield return new WaitForSeconds(fallTime);
+        var src = player.Fall();
+
+        // Removing the node association since it fell
+        player.Node = null;
+
+        // If this is the only player left, then we will wait for the fall sfx to finish
+        // otherwise we will wait briefly
+        if (Players.Count == 1)
+            yield return new WaitForSeconds(src.Clip.length);
+        else
+            yield return new WaitForSeconds(fallTime);
 
         // Destroy the player
         if (MovingPlayers.Contains(player))
@@ -287,11 +306,11 @@ public class LevelController : Singleton<LevelController>
     /// </summary>
     /// <param name="player"></param>
     /// <param name="crate"></param>
-    /// <param name="playerNode"></param>
+    /// <param name="destinationNode"></param>
     /// <param name="crateNode"></param>
     /// <param name="direction"></param>
     /// <returns></returns>
-    IEnumerator MoveCrateRoutine(Player player, Crate crate, Node playerNode, Node crateNode, Vector2 direction)
+    IEnumerator MoveCrateRoutine(Player player, Crate crate, Node destinationNode, Node crateNode, Vector2 direction)
     {
         // If the current node we are moving away from is a duplication tile
         // We want to trigger it to duplicate
@@ -299,10 +318,10 @@ public class LevelController : Singleton<LevelController>
 
         // We need to move both the player and the moveable
         StartCoroutine(MoveController.instance.MoveToRoutine(crate.gameObject, crateNode.Position, moveTime));
-        yield return StartCoroutine(MoveController.instance.PlayerPushRoutine(player, playerNode.Position, direction, moveTime));
+        yield return StartCoroutine(MoveController.instance.PlayerPushRoutine(player, destinationNode, direction, moveTime));
 
         // Reassign the block to the new node
-        playerNode.Crate = null;
+        destinationNode.Crate = null;
         crateNode.Crate = crate;
 
         // Crate is covering a hole

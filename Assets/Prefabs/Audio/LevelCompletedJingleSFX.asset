@@ -12,10 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd7c8ef0c141c1f48805158a4a09d411, type: 3}
   m_Name: LevelCompletedJingleSFX
   m_EditorClassIdentifier: 
-  preventMultiple: 1
+  preventMultiple: 0
   loop: 0
-  clip: {fileID: 8300000, guid: 61724ce1cf710ab429401c588c5d72d2, type: 3}
-  clips: []
+  clip: {fileID: 0}
+  clips:
+  - {fileID: 8300000, guid: 3cd405cb7bf1c404e85e2bc58f2a3a0f, type: 3}
+  - {fileID: 8300000, guid: 9ddb89746bace90408ae5645b6ab3122, type: 3}
+  - {fileID: 8300000, guid: 140baf452b2de5c429503eed5187a3e6, type: 3}
   volume: 1
   pitch: 1
   randomPitch:

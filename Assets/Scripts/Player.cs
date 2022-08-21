@@ -77,5 +77,5 @@ public class Player : MonoBehaviour
         PlayerAnimations.Jump(Direction);
     }
 
-    public void Fall() => PlayerAnimations.Fall();
+    public SFXAudioSource Fall() => PlayerAnimations.Fall();
 }

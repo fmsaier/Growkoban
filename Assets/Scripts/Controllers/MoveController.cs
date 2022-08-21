@@ -140,13 +140,10 @@ public class MoveController : Singleton<MoveController>
     /// <param name="direction"></param>
     /// <param name="time"></param>
     /// <returns></returns>
-    public IEnumerator PlayerPushRoutine(Player player, Vector2 destination, Vector2 direction, float time)
+    public IEnumerator PlayerPushRoutine(Player player, Node destinationNode, Vector2 direction, float time)
     {
         player.Push(direction);
-
-        LeanTween.move(player.gameObject, destination, time);
-        yield return new WaitForSeconds(time);
-
+        yield return StartCoroutine(MovePlayerRoutine(player, destinationNode, direction, time));
         player.Idle(direction);
     }
 

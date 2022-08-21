@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fd7c8ef0c141c1f48805158a4a09d411, type: 3}
-  m_Name: GameMusic
+  m_Name: PlayerSpawnSFX
   m_EditorClassIdentifier: 
-  preventMultiple: 1
-  loop: 1
-  clip: {fileID: 8300000, guid: 86d0382e645b2004aa67aa01853a4ded, type: 3}
+  preventMultiple: 0
+  loop: 0
+  clip: {fileID: 8300000, guid: e4ffb015b353d084ca734f647b7a71ba, type: 3}
   clips: []
   volume: 1
   pitch: 1

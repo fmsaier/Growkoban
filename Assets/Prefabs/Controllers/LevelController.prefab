@@ -47,6 +47,7 @@ MonoBehaviour:
   isPersistent: 0
   moveTime: 0.3
   fallTime: 0.15
+  gameOverSFX: {fileID: 11400000, guid: 9e00bfa340421224cb54920fcdb3ff39, type: 2}
   moveTween: 1
   winJingleSFX: {fileID: 11400000, guid: a866d2bd4db65f54d9aedb0f3eabd0e8, type: 2}
   activePlayers: []

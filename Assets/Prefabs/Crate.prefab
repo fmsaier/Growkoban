@@ -73,7 +73,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1019969347
   m_SortingLayer: 3
-  m_SortingOrder: -2
+  m_SortingOrder: -1
   m_Sprite: {fileID: 21300000, guid: 1ab05a6cd28660648acf2ea98a463bba, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -144,4 +144,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inHoleSprite: {fileID: 21300000, guid: 1da60a1c710ed334395b420f45fcc05c, type: 3}
+  fillHoleSFX: {fileID: 11400000, guid: fe3c0304f35d18e40b90db8b226358d7, type: 2}
   spriteRenderer: {fileID: 8808750274870848249}

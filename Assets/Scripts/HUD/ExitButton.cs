@@ -14,6 +14,7 @@ public class ExitButton : MenuButton
 
     protected override void TriggerButtonAction()
     {
-        GameManager.instance.QuiteGame();
+        GameMenuController.instance.CloseMenu();
+        // GameManager.instance.QuiteGame();
     }
 }

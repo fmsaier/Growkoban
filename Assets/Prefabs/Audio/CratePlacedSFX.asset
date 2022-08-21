@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd7c8ef0c141c1f48805158a4a09d411, type: 3}
   m_Name: CratePlacedSFX
   m_EditorClassIdentifier: 
-  preventMultiple: 0
+  preventMultiple: 1
   loop: 0
   clip: {fileID: 8300000, guid: 903e8f1e4dd0f0a44a54a4233a2ee03a, type: 3}
   clips: []

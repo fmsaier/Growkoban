@@ -7,16 +7,10 @@ using UnityEngine;
 public class MainMenuController : Singleton<MainMenuController>
 {
     [SerializeField]
-    GameObject levelSelectMenu;
-
-    [SerializeField]
-    GameObject howToPlayMenu;
+    GameObject levelSelectMenu;  
 
     [SerializeField]
     GameObject settingsMenu;
-
-    [SerializeField]
-    GameObject creditsMenu;
 
     GameObject currentMenu;
 
@@ -30,10 +24,7 @@ public class MainMenuController : Singleton<MainMenuController>
 
     void OnSceneLoaded()
     {
-        CloseMenu(howToPlayMenu);
         CloseMenu(settingsMenu);
-        CloseMenu(creditsMenu);
-
         OpenMenu(levelSelectMenu);
     }
 
@@ -42,21 +33,10 @@ public class MainMenuController : Singleton<MainMenuController>
         switch (buttonType)
         {
             case MenuButtonType.LevelSelect:
-                //// Disable all the buttons to prevent them from being accessible
-                //foreach (var button in FindObjectsOfType<MenuButton>())
-                //    button.Disable();
-
-                //GameManager.instance.NextLevel();
                 OpenMenu(levelSelectMenu);
-                break;
-            case MenuButtonType.HowTo:
-                OpenMenu(howToPlayMenu);
-                break;
+                break;          
             case MenuButtonType.Settings:
                 OpenMenu(settingsMenu);
-                break;
-            case MenuButtonType.Credits:
-                OpenMenu(creditsMenu);
                 break;
             case MenuButtonType.Back:
                 CloseMenu(currentMenu);

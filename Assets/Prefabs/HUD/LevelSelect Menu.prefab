@@ -35,8 +35,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -26.775002}
-  m_SizeDelta: {x: 0, y: -126.450005}
+  m_AnchoredPosition: {x: 4.23999, y: -56.74}
+  m_SizeDelta: {x: -32.75, y: -142.71}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2607755107259382798
 MonoBehaviour:
@@ -50,8 +50,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac5e6ef2a37f4ab4c8902193acebdada, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buttonPrefab: {fileID: 2991449855514013817, guid: cc93c5d13b8e8da44840712dc84d85dc,
-    type: 3}
+  buttonPrefab: {fileID: 2991449855514013817, guid: cc93c5d13b8e8da44840712dc84d85dc, type: 3}
 --- !u!114 &8309103974379722895
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -72,7 +71,7 @@ MonoBehaviour:
   m_ChildAlignment: 1
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 150, y: 150}
+  m_CellSize: {x: 96, y: 96}
   m_Spacing: {x: 10, y: 10}
   m_Constraint: 1
   m_ConstraintCount: 4
@@ -111,8 +110,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 125}
+  m_AnchoredPosition: {x: 4.240204, y: -29.210022}
+  m_SizeDelta: {x: -32.75, y: 60.79}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &795984982014360888
 CanvasRenderer:
@@ -144,9 +143,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Level Select
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: b3570482276231c49b27cf55002d8025, type: 2}
-  m_sharedMaterial: {fileID: -4174753274952396040, guid: b3570482276231c49b27cf55002d8025,
-    type: 2}
+  m_fontAsset: {fileID: 11400000, guid: fd849fc9a70256c418cf71850016ba9f, type: 2}
+  m_sharedMaterial: {fileID: 2245315131262844867, guid: fd849fc9a70256c418cf71850016ba9f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -170,7 +168,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 56.75
+  m_fontSize: 61
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -206,7 +204,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 51.160797}
+  m_margin: {x: 0, y: 0, z: 0, w: -0.25381854}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0

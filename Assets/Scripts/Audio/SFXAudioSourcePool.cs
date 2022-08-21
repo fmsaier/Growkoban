@@ -1,20 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Audio;
 using UnityEngine.Pool;
 
 public class SFXAudioSourcePool : MonoBehaviour
 {
     ObjectPool<SFXAudioSource> pool;
     public ObjectPool<SFXAudioSource> Pool
-    { 
-        get 
+    {
+        get
         {
             if (pool == null)
                 pool = new ObjectPool<SFXAudioSource>(CreateSource, OnSourceGet, OnSourceReleased, null, false);
-            return pool; 
-        } 
+            return pool;
+        }
     }
 
     List<SFXAudioSource> sources;
@@ -34,7 +33,7 @@ public class SFXAudioSourcePool : MonoBehaviour
     /// </summary>
     /// <param name="clip"></param>
     /// <returns></returns>
-    public SFXAudioSource GetSourceAssignedToClip(AudioClip clip) => Sources.Where(s => s.Clip == clip).FirstOrDefault();
+    public SFXAudioSource GetSourceAssignedToSFX(SoundEffect sfx) => Sources.Where(s => s.SoundEffect == sfx).FirstOrDefault();
 
     /// <summary>
     /// Creates the game object and components required for an SFXAudioSource to work
@@ -51,7 +50,7 @@ public class SFXAudioSourcePool : MonoBehaviour
         // Need a regular audio source
         AudioSource src;
         src = go.AddComponent<AudioSource>();
-     
+
         // Now we create the interface for that audio source
         var sfx = go.AddComponent<SFXAudioSource>();
 

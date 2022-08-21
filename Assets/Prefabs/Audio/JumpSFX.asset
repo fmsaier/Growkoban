@@ -14,14 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   preventMultiple: 1
   loop: 0
-  clip: {fileID: 0}
-  clips:
-  - {fileID: 8300000, guid: 2564f724efa5c034a88eb7205f2b9a54, type: 3}
-  - {fileID: 8300000, guid: 80ef05578ae5e8d4da905102ed673c9f, type: 3}
-  - {fileID: 8300000, guid: 52224e7466e1be84e9bfaf53e2622edb, type: 3}
-  - {fileID: 8300000, guid: be1a5c766f41aa1448423b4d225fe8fb, type: 3}
-  volume: 1
+  clip: {fileID: 8300000, guid: 6278e55a3804c1f40bd22b1a2cfd0957, type: 3}
+  clips: []
+  volume: 0.75
   pitch: 1
   randomPitch:
-    min: 0
-    max: 0
+    min: 0.95
+    max: 1.25

@@ -29,6 +29,10 @@ public class SFXAudioSource : MonoBehaviour
     bool isPaused = false;
     bool isConfigured = false;
     bool isMasterAudioPaused = false;
+    
+    SoundEffect soundEffect;
+    public SoundEffect SoundEffect { get { return soundEffect; } }
+
     public bool IsPaused { get { return isPaused; } }
     public bool IsPlaying { get { return Source.isPlaying; } }
 
@@ -101,6 +105,7 @@ public class SFXAudioSource : MonoBehaviour
     /// <returns></returns>
     public SFXAudioSource Play(SoundEffect sfx, int clipIndex = -1)
     {
+        soundEffect = sfx;
         if (sfx == null || gameObject == null)
         {
             // Since a clip was no given we will release this and end here
@@ -120,7 +125,34 @@ public class SFXAudioSource : MonoBehaviour
         Source.Play();
 
         // For non-looping sounds we want to auto-release when they are done playing
-        if(!sfx.loop)
+        if (!sfx.loop)
+            StartCoroutine(ReleaseAudioSourceRoutine());
+
+        return this;
+    }
+
+    public SFXAudioSource Play(MusicClip sfx, int clipIndex = -1)
+    {
+        if (sfx == null || gameObject == null)
+        {
+            // Since a clip was no given we will release this and end here
+            // Also, if the object is disabled for some reason, we want to do the same
+            Release();
+            return null;
+        }
+
+        if (!isConfigured)
+            Configure(sfx, clipIndex);
+
+        // If the clip is already playing then we don't need to play it again
+        if (Source.isPlaying)
+            return this;
+
+        // Play it and start the routine to release this source
+        Source.Play();
+
+        // For non-looping sounds we want to auto-release when they are done playing
+        if (!sfx.loop)
             StartCoroutine(ReleaseAudioSourceRoutine());
 
         return this;
@@ -181,8 +213,12 @@ public class SFXAudioSource : MonoBehaviour
     /// <summary>
     /// Releases itself back into the pool
     /// </summary>
-    void Release()
+    void Release(bool forced = false)
     {
+        // Do not release for prevent multiples!
+        if (!forced && soundEffect != null && soundEffect.preventMultiple)
+            return;
+
         isConfigured = false;
         AudioManager.instance.OnSourceReleased(this);
     }

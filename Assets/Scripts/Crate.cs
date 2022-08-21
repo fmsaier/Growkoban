@@ -6,6 +6,9 @@ public class Crate : Moveable
     Sprite inHoleSprite;
 
     [SerializeField]
+    SoundEffect fillHoleSFX;
+
+    [SerializeField]
     SpriteRenderer spriteRenderer;
     SpriteRenderer SpriteRenderer
     {
@@ -21,5 +24,6 @@ public class Crate : Moveable
     {
         SpriteRenderer.sprite = inHoleSprite;
         SpriteRenderer.sortingLayerID = SortingLayer.NameToID("Ground");
+        AudioManager.instance.Play(fillHoleSFX);
     }
 }

@@ -162,10 +162,10 @@ public class PlayerAnimations : MonoBehaviour
         PlayAnimation(state);
     }
 
-    public void Fall()
+    public SFXAudioSource Fall()
     {
-        AudioManager.instance.Play(fallSFX);
         PlayAnimation(FallAnimHash);
+        return AudioManager.instance.Play(fallSFX);
     }
     void PlayAnimation(int state) => Animator.Play(state);
 }

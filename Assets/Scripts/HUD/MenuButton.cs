@@ -37,7 +37,7 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerClickHand
 
     protected virtual void TriggerButtonAction()
     {
-        // MainMenuController.instance.OnMenuButtonPressed(buttonType);
+        MainMenuController.instance.OnMenuButtonPressed(buttonType);
     }
 
     public void OnPointerEnter(PointerEventData eventData)

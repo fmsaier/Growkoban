@@ -50,3 +50,9 @@ TagManager:
   - name: AboveGround
     uniqueID: 1019969347
     locked: 0
+  - name: VFX
+    uniqueID: 369669205
+    locked: 0
+  - name: LocalUI
+    uniqueID: 3821784179
+    locked: 0

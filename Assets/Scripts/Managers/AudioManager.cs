@@ -2,6 +2,7 @@
 using UnityEngine;
 using System.Linq;
 using UnityEngine.Audio;
+using UnityEngine.Pool;
 
 public enum MixerType
 {
@@ -60,7 +61,7 @@ public class AudioManager : Singleton<AudioManager>
     [SerializeField, Tooltip("SoundEffect to preview volume change for SFXs")]
     SoundEffect sfxPreview;
     [SerializeField, Tooltip("The song to start playing as soon as this object is loaded")]
-    SoundEffect musicClip;
+    MusicClip musicClip;
 
     [Header("Volume")]
     [SerializeField, Range(0f, 1f)]
@@ -125,7 +126,7 @@ public class AudioManager : Singleton<AudioManager>
         {
             return SrcPool.Sources;
         }
-    }    
+    }
 
     public delegate void TogglePlayback(bool enabled);
     public TogglePlayback TogglePlaybackDelegates;
@@ -254,15 +255,15 @@ public class AudioManager : Singleton<AudioManager>
             return null;
 
         // We only want one of these playing at a time
-        if(sfx.preventMultiple)
+        if (sfx.preventMultiple)
         {
-            var existingSrc = SrcPool.GetSourceAssignedToClip(sfx.Clip());
+            var existingSrc = SrcPool.GetSourceAssignedToSFX(sfx);
             if (existingSrc != null)
             {
                 // Before returning it make sure it is in deed playing
                 existingSrc.Play(sfx, clipIndex);
                 return existingSrc;
-            }   
+            }
         }
 
         var src = GetSource(mixerGroupname);

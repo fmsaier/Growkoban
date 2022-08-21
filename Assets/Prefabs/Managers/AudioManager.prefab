@@ -46,12 +46,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPersistent: 1
-  sfxPreview: {fileID: 11400000, guid: 83f8479afc91c744da11ce9546528f90, type: 2}
-  musicClip: {fileID: 11400000, guid: e43c3de7ae02fc246b2a084943c8aee9, type: 2}
-  defaultMasterVolume: 0.5
-  defaultMusicVolume: 0.25
-  defaultSFXVolume: 0.25
-  mixer: {fileID: 24100000, guid: e5054d8e77e15ca4a86d3db2888cd815, type: 2}
+  sfxPreview: {fileID: 11400000, guid: fe3c0304f35d18e40b90db8b226358d7, type: 2}
+  musicClip: {fileID: 11400000, guid: e51fef5877247774ea01640d3efc67a1, type: 2}
+  defaultMasterVolume: 0.8
+  defaultMusicVolume: 0.2
+  defaultSFXVolume: 0.5
+  mixer: {fileID: 24100000, guid: 52519aa8a38e22248a1001ba814e1530, type: 2}
   masterVolumeParameterName: MasterVolume
   musicVolumeParameterName: MusicVolume
   sfxVolumeParameterName: SFXVolume
